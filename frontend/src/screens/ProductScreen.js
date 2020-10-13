@@ -13,7 +13,7 @@ const ProductScreen = ({ match }) => {
       //destructure - originally returns data
       //calls the /api/products route and gets that json data from backend
       //await keyword makes the promise settle and return its result
-      const { data } = await axios.get(`/api/product/${match.params.id}`);
+      const { data } = await axios.get(`/api/products/${match.params.id}`);
       //setproducts equal to the data that we get from backend
       setProduct(data);
     };
