@@ -1,3 +1,17 @@
+body {
+  font-family: 'Raleway', sans-serif;
+}
+
 main {
   min-height: 80vh;
+}
+
+.rating span {
+  margin: 0.1rem;
+}
+
+/*top bottom padding = 1 rem left right padding = 0
+*/
+h3 {
+  padding: 1rem 0;
 }
