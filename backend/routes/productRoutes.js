@@ -9,7 +9,13 @@ import Product from '../models/productModel.js';
 router.get(
   '/',
   asyncHandler(async (req, res) => {
+    //fetch all products from DB
     const products = await Product.find();
+    if (!products.length === 0)
+      throw new Error(
+        'There are not products currently available in the marketplace.'
+      );
+    //return retrieved list as json file
     res.json(products);
   })
 );
