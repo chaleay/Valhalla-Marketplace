@@ -18,7 +18,8 @@ import Message from '../components/Message';
 
 //destructure - originally it would of been props.match.params.id
 const ProductScreen = ({ history, match }) => {
-  const [qty, setQty] = useState(0);
+  //second one is modifier for useState
+  const [qty, setQty] = useState(1);
 
   const dispatch = useDispatch();
 
