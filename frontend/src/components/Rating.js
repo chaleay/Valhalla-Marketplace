@@ -56,7 +56,7 @@ const Rating = ({ value, text, color }) => {
         <i
           style={{ color: color }}
           className={
-            value >= 5
+            value === 5
               ? 'fas fa-star'
               : value >= 4.5
               ? 'fas fa-star-half alt'
@@ -71,6 +71,7 @@ const Rating = ({ value, text, color }) => {
 
 Rating.defaultProps = {
   color: '#f8e825',
+  value: 0,
 };
 
 //establish propTypes for passing in props

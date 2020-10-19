@@ -10,7 +10,6 @@ import {
   Form,
   Button,
   Card,
-  ListGroupItem,
 } from 'react-bootstrap';
 import { removeFromCart, addToCart } from '../actions/cartActions';
 
@@ -123,7 +122,7 @@ const CartScreen = ({ match, location, history }) => {
             <Button
               type="button"
               className="btn-block"
-              disable={cartItems.length === 0}
+              disabled={cartItems.length === 0}
               onClick={checkoutHandler}
             >
               Proceed to Checkout
