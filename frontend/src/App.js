@@ -7,6 +7,8 @@ import HomeScreen from './screens/HomeScreen';
 import ProductScreen from './screens/ProductScreen';
 import CartScreen from './screens/CartScreen';
 import LoginScreen from './screens/LoginScreen';
+import RegisterScreen from './screens/RegisterScreen';
+import ProfileScreen from './screens/ProfileScreen';
 
 //by default runs on port 3000
 const App = () => {
@@ -15,9 +17,11 @@ const App = () => {
       <Header />
       <main className="py-3">
         <Container>
-          <Route path="/login" component={LoginScreen} exact />
-          <Route path="/product/:id" component={ProductScreen} exact />
-          <Route path="/cart/:id?" component={CartScreen} exact />
+          <Route path="/login" component={LoginScreen} />
+          <Route path="/register" component={RegisterScreen} />
+          <Route path="/product/:id" component={ProductScreen} />
+          <Route path="/cart/:id?" component={CartScreen} />
+          <Route path="/profile" component={ProfileScreen} />
           <Route path="/" component={HomeScreen} exact />
         </Container>
       </main>

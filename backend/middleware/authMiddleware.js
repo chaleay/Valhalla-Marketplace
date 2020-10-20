@@ -14,7 +14,7 @@ const protect = asyncHandler(async (req, res, next) => {
   ) {
     try {
       token = req.headers.authorization.split(' ')[1];
-      //retrieve id of user object through verifying the token with jwt library
+      //retrieve mongoDB id of user object through verifying the token with jwt library
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       req.user = await User.findById(decoded.id).select('-password');
       next();

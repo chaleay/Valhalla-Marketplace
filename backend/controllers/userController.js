@@ -2,6 +2,7 @@ import asyncHandler from 'express-async-handler';
 import User from '../models/userModel.js';
 import generateToken from '../utils/generateToken.js';
 
+const passCheck = new RegExp('^[a-zA-Z0-9]{5,}$');
 // @desc auth user and get token
 // @route post request to api/users/login
 // @public
@@ -46,6 +47,44 @@ const getUserProfile = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc update user profile
+// @route PUT
+// @private
+const updateUserProfile = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id);
+
+  //check password validity
+  if (req.body.password && !passCheck.test(req.body.password)) {
+    res.status(400);
+    throw new Error('Invalid Password - needs to be at least 5 characters');
+  }
+
+  if (user) {
+    {
+      user.name = req.body.name || user.name;
+      user.email = req.body.email || user.email;
+      //if password was changed, update it accordingly
+      if (req.body.password) {
+        user.password = req.body.password;
+      }
+    }
+
+    //save redefined user entry to database
+    const updatedUser = await user.save();
+    res.json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      isAdmin: updatedUser.isAdmin,
+      //IMPORTANT: this is where we generate the token for the session
+      token: generateToken(updatedUser._id),
+    });
+  } else {
+    res.status(404);
+    throw new Error('User not found...');
+  }
+});
+
 // @desc Register a new user
 // @route POST /api/users
 // @public
@@ -56,6 +95,12 @@ const registerUser = asyncHandler(async (req, res) => {
   if (userExists) {
     res.status(400);
     throw new Error('User already Exists');
+  }
+
+  //check password validity
+  if (!passCheck.test(req.body.password)) {
+    res.status(400);
+    throw new Error('Invalid Password - needs to be at least 5 characters');
   }
 
   //dont need to set isAdmin, set to false by default
@@ -81,4 +126,4 @@ const registerUser = asyncHandler(async (req, res) => {
   }
 });
 
-export { authUser, registerUser, getUserProfile };
+export { authUser, registerUser, getUserProfile, updateUserProfile };
