@@ -49,6 +49,7 @@ const ProfileScreen = ({ location, history }) => {
     } //dependencies is an optional array of dependencies. useEffect() executes callback only when the dependencies have changed between renderings.
   }, [dispatch, history, userInfo, user, success]);
 
+  //handle submission of profile
   const submitHandler = (e) => {
     e.preventDefault();
 
@@ -56,6 +57,8 @@ const ProfileScreen = ({ location, history }) => {
     if (password !== confirmPassword) {
       setMessage('Passwords do not match');
     } else {
+      //trim end for whitespace
+      setName(name.trimEnd());
       //dispatch put request
       dispatch(updateUserProfile({ id: user._id, name, email, password }));
       //window.location.reload();

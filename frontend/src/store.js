@@ -28,13 +28,21 @@ const cartItemsFromStorage = localStorage.getItem('cartItems')
   : [];
 
 const userInfoFromStorage = localStorage.getItem('userInfo')
-  ? //return cartItems, else return empty array if sl
+  ? //return cartItems, else return empty array if sldds
     JSON.parse(localStorage.getItem('userInfo'))
   : null;
 
+const shippingAddressFromStorage = localStorage.getItem('shippingAddress')
+  ? //return cartItems, else return empty array if sl
+    JSON.parse(localStorage.getItem('shippingAddress'))
+  : {};
+
 const initialState = {
-  //cart is an object with contains cartItems, which is defined above
-  cart: { cartItems: cartItemsFromStorage },
+  //cart is an object with contains cartItems, which is defined above and shipping address
+  cart: {
+    cartItems: cartItemsFromStorage,
+    shippingAddress: shippingAddressFromStorage,
+  },
   userLogin: { userInfo: userInfoFromStorage },
 };
 

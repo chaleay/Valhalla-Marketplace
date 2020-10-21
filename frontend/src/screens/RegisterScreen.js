@@ -36,7 +36,7 @@ const LoginScreen = ({ location, history }) => {
 
     if (password !== confirmPassword) {
       setMessage('Passwords do not match');
-    } else dispatch(register(name, email, password));
+    } else dispatch(register(name.trimEnd(), email, password));
   };
 
   return (
@@ -49,7 +49,7 @@ const LoginScreen = ({ location, history }) => {
         <Form.Group controlId="name">
           <Form.Label>Name</Form.Label>
           <Form.Control
-            type="name"
+            type="text"
             value={name}
             placeholder="Enter Name"
             onChange={(e) => setName(e.target.value)}

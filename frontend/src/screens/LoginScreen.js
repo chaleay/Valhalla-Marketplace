@@ -24,7 +24,7 @@ const LoginScreen = ({ location, history }) => {
   useEffect(() => {
     //if userInfo present, that means we are already logged in
     if (userInfo) {
-      console.log('logged in, redirecting....');
+      console.log('logged in, redirecting');
       history.push(redirect);
     }
   }, [history, userInfo, redirect]);
