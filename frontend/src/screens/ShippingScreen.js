@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import FormContainer from '../components/FormContainer';
+import CheckoutSteps from '../components/CheckoutSteps';
 //error with module can be ignored for now
 import CountrySelect from 'react-bootstrap-country-select';
 import Message from '../components/Message';
@@ -16,8 +17,12 @@ const ShippingScreen = ({ history }) => {
   const [city, setCity] = useState(shippingAddress.city);
   const [postalCode, setPostalCode] = useState(shippingAddress.postalCode);
   const [region, setRegion] = useState(shippingAddress.region);
-  const [country, setCountry] = useState(shippingAddress.country.name || null);
+  const [country, setCountry] = useState(shippingAddress.country || null);
   const [message, setMessage] = useState(null);
+
+  //retrieve userLogin information from the current state (see store.js)
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
 
   const dispatch = useDispatch();
 
@@ -26,8 +31,8 @@ const ShippingScreen = ({ history }) => {
     if (!country) {
       setMessage('You must select a valid country');
     } else {
-      setCountry(country.name);
       dispatch(
+        //passing in an object with all these parameters needed for successful shipping
         saveShippingAddress({
           address,
           addressTwo,
@@ -42,17 +47,12 @@ const ShippingScreen = ({ history }) => {
   };
 
   useEffect(() => {
-    /*
-      if (!country) {
-        setMessage('A valid country must be selected');
-      } else {
-        setMessage(null);
-      }
-      */
-  }, [country]);
+    if (!userInfo) history.push(`/login?redirect=shipping`);
+  }, [country, history, userInfo]);
 
   return (
     <FormContainer>
+      \<CheckoutSteps step2 />
       <h1>Shipping</h1>
       {message && <Message variant="danger">{message}</Message>}
       <Form onSubmit={submitHandler}>

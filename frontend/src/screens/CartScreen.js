@@ -34,6 +34,7 @@ const CartScreen = ({ match, location, history }) => {
     dispatch(removeFromCart(id));
   };
   const checkoutHandler = () => {
+    //if not loggedin in, redirect to log, otherwise push to shipping
     history.push(`/login?redirect=shipping`);
   };
 

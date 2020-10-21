@@ -60,6 +60,7 @@ export const login = (email, password) => async (dispatch) => {
 export const logout = () => (dispatch) => {
   //remove data from localstorage
   localStorage.removeItem('userInfo');
+  localStorage.removeItem('shippingAddress');
   dispatch({ type: USER_LOGOUT });
 };
 

@@ -37,6 +37,8 @@ const shippingAddressFromStorage = localStorage.getItem('shippingAddress')
     JSON.parse(localStorage.getItem('shippingAddress'))
   : {};
 
+//create storage getter for paymentmethod?
+
 const initialState = {
   //cart is an object with contains cartItems, which is defined above and shipping address
   cart: {

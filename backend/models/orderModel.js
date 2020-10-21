@@ -25,7 +25,15 @@ const orderSchema = mongoose.Schema(
         type: String,
         required: true,
       },
+      addressTwo: {
+        type: String,
+        required: true,
+      },
       city: {
+        type: String,
+        required: true,
+      },
+      region: {
         type: String,
         required: true,
       },
