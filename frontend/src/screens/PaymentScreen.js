@@ -17,7 +17,7 @@ const PaymentScreen = ({ history }) => {
   }
 
   const [paymentMethod, setPaymentMethod] = useState('Paypal');
-  const [message, setMessage] = useState(null);
+  const [message] = useState(null);
 
   const dispatch = useDispatch();
 

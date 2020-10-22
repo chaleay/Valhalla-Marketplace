@@ -10,6 +10,7 @@ import {
 export const addToCart = (id, qty) => async (dispatch, getState) => {
   const { data } = await axios.get(`/api/products/${id}`);
 
+  //the payload that is dispatched to the reducer
   dispatch({
     type: CART_ADD_ITEM,
     payload: {

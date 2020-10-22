@@ -71,6 +71,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 
     //save redefined user entry to database
     const updatedUser = await user.save();
+    //send a json response used as action.payload in frontend
     res.json({
       _id: updatedUser._id,
       name: updatedUser.name,
