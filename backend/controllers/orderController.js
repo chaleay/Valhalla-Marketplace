@@ -91,7 +91,7 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
 // @desc Get logged in user orders
 // @route GET /api/orders/myorders
 // @access Private
-const updateOrderToPaid = asyncHandler(async (req, res) => {
+const getMyOrders = asyncHandler(async (req, res) => {
   //populate user with name and email
   if (req.user) {
     const orders = await Order.find({ user: req.user._id });
