@@ -25,12 +25,20 @@ const OrderScreen = ({ history, match }) => {
     <Message variant="danger">{error}</Message>
   ) : (
     <>
-      <h1>Order {order.order_id} </h1>
+      <h1>Order {order._id} </h1>
       <Row>
         <Col md={3}>
           <ListGroup variant="flush">
             <ListGroup.Item>
               <h2>Shipping</h2>
+              <p>
+                <strong>Name: </strong>
+                {order.user.name ? order.user.name.toUpperCase() : ''}
+              </p>
+              <p>
+                <strong>Email: </strong>
+                <a href={`mailto${order.user.email}`}>{order.user.email}</a>
+              </p>
               <p>
                 <strong>Address: </strong>
                 {order.shippingAddress.address}
@@ -53,6 +61,13 @@ const OrderScreen = ({ history, match }) => {
                 <strong>Zip Code: </strong>
                 {order.shippingAddress.postalCode}
               </p>
+              {order.isDelivered ? (
+                <Message variant="success">
+                  Delivered on {order.deliveredAt}
+                </Message>
+              ) : (
+                <Message variant="danger">Not delivered</Message>
+              )}
             </ListGroup.Item>
             <ListGroup.Item>
               <h2>Payment Method</h2>
@@ -60,11 +75,16 @@ const OrderScreen = ({ history, match }) => {
                 <strong>Method: </strong>
                 {order.paymentMethod}
               </p>
+              {order.isPaid ? (
+                <Message variant="success">Paid on {order.paidAt}</Message>
+              ) : (
+                <Message variant="danger">Not Paid</Message>
+              )}
             </ListGroup.Item>
           </ListGroup>
         </Col>
         <Col md={9}>
-          <ListGroup>
+          <ListGroup variant="flush">
             <ListGroup.Item>
               <h2>Order Items</h2>
               {order.orderItems.length === 0 ? (
@@ -99,7 +119,7 @@ const OrderScreen = ({ history, match }) => {
             </ListGroup.Item>
           </ListGroup>
           <Card>
-            <ListGroup variant="flush">
+            <ListGroup>
               <ListGroup.Item>
                 <h2>Order Summary</h2>
               </ListGroup.Item>

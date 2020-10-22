@@ -44,9 +44,8 @@ const addOrderItems = asyncHandler(async (req, res) => {
 //@desc Get Order by ID
 //@route GET /api/orders/:id
 //@access Private
-
 const getOrderById = asyncHandler(async (req, res) => {
-  //populate user with name and email
+  //retrieve order from DB and then populate user with name and email
   const order = await Order.findById(req.params.id).populate(
     'user',
     'name email'
@@ -60,4 +59,33 @@ const getOrderById = asyncHandler(async (req, res) => {
   }
 });
 
-export { addOrderItems, getOrderById };
+//@desc update order to paid
+//@route PUT /api/orders/:id/pay
+//@access Private
+const updateOrderToPaid = asyncHandler(async (req, res) => {
+  //populate user with name and email
+  const order = await Order.findById(req.params.id);
+
+  //update the current order
+  if (order) {
+    order.isPaid = true;
+    order.paidAt = Date.now();
+    //this shit is added by paypal API
+    //defined in front by API, hence why their parent is req
+    order.paymentResult = {
+      id: req.body.id,
+      status: req.body.status,
+      update_time: req.body.update_time,
+      email_addess: req.body.payer.email_address,
+    };
+
+    //update existing order in DB
+    const updatedOrder = await order.save();
+    res.json(updatedOrder);
+  } else {
+    res.status(404);
+    throw new Error('An error occured while processing payment information.');
+  }
+});
+
+export { addOrderItems, getOrderById, updateOrderToPaid };
