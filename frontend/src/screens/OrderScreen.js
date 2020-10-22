@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 import { getOrderDetails } from '../actions/orderActions';
+import axios from 'axios';
 
 const OrderScreen = ({ history, match }) => {
   //attach hook
@@ -16,6 +17,14 @@ const OrderScreen = ({ history, match }) => {
   const { order, loading, error } = orderDetails;
 
   useEffect(() => {
+    const addPayPalScript = async () => {
+      const { data: clientId } = await axios.get('/api/config/paypal');
+      const script = document.createElement('script');
+      script.type = 'text/javascript';
+      script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`;
+      script.async = true;
+    };
+
     dispatch(getOrderDetails(orderId));
   }, [dispatch, orderId]);
 
