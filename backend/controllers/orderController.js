@@ -88,4 +88,20 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc Get logged in user orders
+// @route GET /api/orders/myorders
+// @access Private
+const updateOrderToPaid = asyncHandler(async (req, res) => {
+  //populate user with name and email
+  if (req.user) {
+    const orders = await Order.find({ user: req.user._id });
+    res.json(orders);
+  } else {
+    res.status(401);
+    throw new Error(
+      'Apparently, you are not authorized to view your own orders.'
+    );
+  }
+});
+
 export { addOrderItems, getOrderById, updateOrderToPaid };
