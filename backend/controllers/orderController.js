@@ -104,4 +104,4 @@ const getMyOrders = asyncHandler(async (req, res) => {
   }
 });
 
-export { addOrderItems, getOrderById, updateOrderToPaid };
+export { addOrderItems, getOrderById, updateOrderToPaid, getMyOrders };

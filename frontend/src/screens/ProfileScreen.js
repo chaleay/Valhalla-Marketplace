@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Button, Row, Col } from 'react-bootstrap';
+import { Form, Button, Row, Col, Table } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 import { getUserDetails, updateUserProfile } from '../actions/userActions';
 import { USER_UPDATE_PROFILE_RESET } from '../constants/userConstants';
+import { listMyOrders } from '../actions/orderActions';
+import { LinkContainer } from 'react-router-bootstrap';
 
 //destructure location from props
 const ProfileScreen = ({ location, history }) => {
@@ -20,13 +22,22 @@ const ProfileScreen = ({ location, history }) => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
-  //retrieve userDetails from redux state if available
+  //retrieve userDetails from redux state if available (get state)
   const userDetails = useSelector((state) => state.userDetails);
   const { loading, error, user } = userDetails;
 
-  //retrieve success from userUpdateProfile
+  //retrieve success from userUpdateProfile (PUT STATE, resets after successful)
   const userUpdateProfile = useSelector((state) => state.userUpdateProfile);
   const { success } = userUpdateProfile;
+
+  //get orders from state for this specific user
+  const orderListMy = useSelector((state) => state.orderListMy);
+  const {
+    loading: listMyLoading,
+    error: listMyError,
+    orders,
+    shouldRenderOrderList,
+  } = orderListMy;
 
   //redirect if already logged in
   useEffect(() => {
@@ -35,18 +46,21 @@ const ProfileScreen = ({ location, history }) => {
       history.push('/login');
     } else {
       //user is logged in, but no profile info currently stored in state, OR succesfully updated user Details (need to reobtain data)
-      if (!user || !user.name || success) {
+      if (!user || !user.name || success || shouldRenderOrderList) {
+        dispatch(listMyOrders());
         //reset user update user profile state
         dispatch({ type: USER_UPDATE_PROFILE_RESET });
-        //update each render cycle?
         dispatch(getUserDetails('profile'));
-        //after this dispatch, userDetails now defined!
+
+        //update each render cycle?
       } else {
         //if userDetails is defined, no need to retrieve userInfo - safe to use useState hook
         setName(user.name);
         setEmail(user.email);
       }
-    } //dependencies is an optional array of dependencies. useEffect() executes callback only when the dependencies have changed between renderings.
+    }
+
+    //dependencies is an optional array of dependencies. useEffect() executes callback only when the dependencies have changed between renderings.
   }, [dispatch, history, userInfo, user, success]);
 
   //handle submission of profile
@@ -117,8 +131,62 @@ const ProfileScreen = ({ location, history }) => {
           </Button>
         </Form>
       </Col>
-      <Col md={9} align="center">
-        <h1>My Orders</h1>
+      <Col md={9}>
+        <h1 align="center">My Orders</h1>
+        {listMyLoading ? (
+          <Loader />
+        ) : listMyError ? (
+          <Message variant="danger">{listMyError}</Message>
+        ) : (
+          <Table striped bordered hover responsive className="table-sm">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>DATE</th>
+                <th>TOTAL</th>
+                <th>PAID</th>
+                <th>Delivered</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {orders &&
+                orders.map((order) => (
+                  <tr key={order._id}>
+                    <td>{order._id}</td>
+                    <td>{order.createdAt.substring(0, 10)}</td>
+                    <td>{order.totalPrice}</td>
+                    <td align="center">
+                      {order.isPaid ? (
+                        order.paidAt.substring(0, 10)
+                      ) : (
+                        <i className="fas fa-times" style={{ color: 'red' }}>
+                          {' '}
+                        </i>
+                      )}
+                    </td>
+                    <td align="center">
+                      {' '}
+                      {order.isDelivered ? (
+                        order.deliveredAt.substring(0, 10)
+                      ) : (
+                        <i className="fas fa-times" style={{ color: 'red' }}>
+                          {' '}
+                        </i>
+                      )}
+                    </td>
+                    <td align="center">
+                      <LinkContainer to={`/order/${order._id}`}>
+                        <Button className="btn-sm" variant="light">
+                          Details
+                        </Button>
+                      </LinkContainer>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </Table>
+        )}
       </Col>
     </Row>
   );
