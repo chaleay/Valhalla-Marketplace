@@ -28,7 +28,7 @@ const authUser = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc get user profile
+// @desc get user profile (ID IS OBTAINED FROM TOKEN)
 // @route GET
 // @private
 const getUserProfile = asyncHandler(async (req, res) => {

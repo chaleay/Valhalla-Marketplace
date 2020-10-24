@@ -3,12 +3,15 @@ import { Form, Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
-import { getUserDetails } from '../actions/userActions';
+import { getUserDetails, updateUser } from '../actions/userActions';
 import FormContainer from '../components/FormContainer';
 import { Link } from 'react-router-dom';
+import { USER_UPDATE_ADMIN_RESET } from '../constants/userConstants';
 
 //destructure location from props
-const UserEditScreen = ({ location, history, match }) => {
+const UserEditScreen = ({ match }) => {
+  //TODO: user who is logged in as admin cannot set themselves at not admin while logged on
+
   const userId = match.params.id;
 
   const [name, setName] = useState('');
@@ -22,33 +25,53 @@ const UserEditScreen = ({ location, history, match }) => {
   const userDetails = useSelector((state) => state.userDetails);
   const { loading, error, user } = userDetails;
 
+  const userUpdateAdmin = useSelector((state) => state.userUpdateAdmin);
+  const {
+    loading: loadingUpdate,
+    error: errorUpdate,
+    success: successUpdate,
+  } = userUpdateAdmin;
+
   //return the quertstring part of the url, and then select the first param
-  const redirect = location.search ? location.search.split('=')[1] : '/';
+  //const redirect = location.search ? location.search.split('=')[1] : '/';
 
   //redirect if already logged in
   useEffect(() => {
-    if (!user.name || user._id !== userId) {
+    if (successUpdate) {
+      //reset userUpdateAdmin state so we don't get constant refreshes
+      dispatch({ type: USER_UPDATE_ADMIN_RESET });
+      //history.push('/admin/userlist');
+    }
+
+    if (!user || !user.name || user._id !== userId) {
       dispatch(getUserDetails(userId));
     } else {
       setName(user.name);
       setEmail(user.email);
       setIsAdmin(user.isAdmin);
     }
-  }, [user, userId, message]);
+  }, [dispatch, user, userId, successUpdate]);
 
   const submitHandler = (e) => {
     e.preventDefault();
-    setMessage('Succesfully updated');
+    dispatch(updateUser({ _id: userId, name, email, isAdmin }));
+    if (successUpdate) setMessage('Succesfully updated');
   };
 
   return (
     <>
-      <Link to="/admin/userList" className="btn btn-light my-3">
-        Go Back
-      </Link>
       <FormContainer>
-        <h1>Admin | Update User Info</h1>
-        {message && <Message variant="danger">{message}</Message>}
+        <Link to="/admin/userList" className="btn btn-light my-3">
+          Go Back
+        </Link>
+        <h1 align="center">Admin | Update User Info</h1>
+        {message && <Message variant="success">{message}</Message>}
+        {loadingUpdate ? (
+          <Loader />
+        ) : errorUpdate ? (
+          <Message variant="danger">{errorUpdate}</Message>
+        ) : null}
+
         {loading ? (
           <Loader></Loader>
         ) : (

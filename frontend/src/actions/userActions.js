@@ -21,6 +21,9 @@ import {
   USER_DELETE_SUCCESS,
   USER_DELETE_REQUEST,
   USER_DELETE_FAIL,
+  USER_UPDATE_ADMIN_FAIL,
+  USER_UPDATE_ADMIN_REQUEST,
+  USER_UPDATE_ADMIN_SUCCESS,
 } from '../constants/userConstants';
 import { ORDER_LIST_MY_RESET } from '../constants/orderConstants';
 
@@ -70,6 +73,8 @@ export const logout = () => (dispatch) => {
   //remove data from localstorage
   localStorage.removeItem('userInfo');
   localStorage.removeItem('shippingAddress');
+
+  //user stuff reset
   dispatch({ type: USER_DETAILS_RESET });
   dispatch({ type: ORDER_LIST_MY_RESET });
 
@@ -197,7 +202,6 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
     //after request, dispatch redux success event
     dispatch({
       type: USER_UPDATE_PROFILE_SUCCESS, //this returns userInfo object
-      payload: data,
     });
 
     //dispatch this event to set the userLogin state to match our most current updated profile (Needed for header display of name)
@@ -295,6 +299,55 @@ export const deleteUserAdmin = (id) => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: USER_DELETE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+//@ADMIN FUNCTION
+//updates user of choice through panel
+export const updateUser = (user) => async (dispatch, getState) => {
+  try {
+    //redux action type
+    dispatch({
+      type: USER_UPDATE_ADMIN_REQUEST,
+    });
+
+    //destructure getState.userLogin.userInfo
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        //put in header to allow auth - otherwise get 401 error
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    //BACKEND CALL to update user info
+    //make request using axios
+    //we update values from user parameter
+    const { data } = await axios.put(`/api/users/${user._id}`, user, config);
+    //const { _id, name, email, isAdmin } = data;
+
+    //after request, dispatch redux success event
+    dispatch({
+      type: USER_UPDATE_ADMIN_SUCCESS, //this returns userInfo object
+    });
+
+    //reset user details after put request
+    dispatch({
+      type: USER_DETAILS_SUCCESS, //this returns userInfo object
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_UPDATE_ADMIN_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

@@ -49,14 +49,15 @@ const ProfileScreen = ({ location, history }) => {
       if (!user || !user.name || success || shouldRenderOrderList) {
         dispatch(listMyOrders());
         //reset user update user profile state
+
         dispatch({ type: USER_UPDATE_PROFILE_RESET });
         dispatch(getUserDetails('profile'));
 
         //update each render cycle?
       } else {
         //if userDetails is defined, no need to retrieve userInfo - safe to use useState hook
-        setName(user.name);
-        setEmail(user.email);
+        setName(user.name.trimEnd());
+        setEmail(user.email.trimEnd());
       }
     }
 
@@ -83,10 +84,7 @@ const ProfileScreen = ({ location, history }) => {
     <Row>
       <Col md={3}>
         <h1>Update Profile</h1>
-        {message && <Message variant="danger">{message}</Message>}
-        {success && (
-          <Message variant="success">Sucessfully Updated Profile Info.</Message>
-        )}
+        {message && <Message variant="success">{message}</Message>}
         {error && <Message variant="danger">{error}</Message>}
         {loading && <Loader></Loader>}
         <Form onSubmit={submitHandler}>

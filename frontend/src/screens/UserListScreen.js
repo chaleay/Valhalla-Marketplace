@@ -5,10 +5,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 import { listUsers, deleteUserAdmin } from '../actions/userActions';
-const UserListScreen = ({ match, history }) => {
+const UserListScreen = ({ history }) => {
   const dispatch = useDispatch();
 
-  const userList = useSelector((state) => state.userList);
+  const userList = useSelector((state) => state.userListAdmin);
   const { loading, error, users } = userList;
 
   const userLogin = useSelector((state) => state.userLogin);
