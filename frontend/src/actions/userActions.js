@@ -14,6 +14,13 @@ import {
   USER_UPDATE_PROFILE_FAIL,
   USER_UPDATE_PROFILE_REQUEST,
   USER_UPDATE_PROFILE_SUCCESS,
+  USER_LIST_SUCCESS,
+  USER_LIST_REQUEST,
+  USER_LIST_FAIL,
+  USER_LIST_RESET,
+  USER_DELETE_SUCCESS,
+  USER_DELETE_REQUEST,
+  USER_DELETE_FAIL,
 } from '../constants/userConstants';
 import { ORDER_LIST_MY_RESET } from '../constants/orderConstants';
 
@@ -65,6 +72,10 @@ export const logout = () => (dispatch) => {
   localStorage.removeItem('shippingAddress');
   dispatch({ type: USER_DETAILS_RESET });
   dispatch({ type: ORDER_LIST_MY_RESET });
+
+  //admin reset
+  dispatch({ type: USER_LIST_RESET });
+
   dispatch({ type: USER_LOGOUT });
 };
 
@@ -179,7 +190,7 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
 
     //BACKEND CALL to update user info
     //make request using axios
-    //we update values from user parameter
+    //we update values from user parameter - user is sent as part req.body
     const { data } = await axios.put(`/api/users/profile`, user, config);
     //const { _id, name, email, isAdmin } = data;
 
@@ -199,6 +210,91 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: USER_UPDATE_PROFILE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+//@admin function
+//list users as admin
+export const listUsers = () => async (dispatch, getState) => {
+  try {
+    //redux action type
+    dispatch({
+      type: USER_LIST_REQUEST,
+    });
+
+    //destructure getState.userLogin.userInfo
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        //put in header to allow auth - otherwise get 401 error
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    //BACKEND CALL to update user info
+    //make request using axios
+    //we update values from user parameter
+    const { data } = await axios.get(`/api/users`, config);
+    //const { _id, name, email, isAdmin } = data;
+
+    //after request, dispatch redux success event
+    dispatch({
+      type: USER_LIST_SUCCESS, //this returns userInfo object
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_LIST_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+//@admin function
+//list users as admin
+export const deleteUserAdmin = (id) => async (dispatch, getState) => {
+  try {
+    //redux action type
+    dispatch({
+      type: USER_DELETE_REQUEST,
+    });
+
+    //destructure getState.userLogin.userInfo
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        //put in header to allow auth - otherwise get 401 error
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    //BACKEND CALL to update user info
+    //make request using axios
+    //we update values from user parameter
+    var data = await axios.delete(`/api/users/${id}`, config);
+    //const { _id, name, email, isAdmin } = data;
+
+    //after request, dispatch redux success event
+    dispatch({
+      type: USER_DELETE_SUCCESS, //this returns userInfo object
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_DELETE_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

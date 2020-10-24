@@ -61,7 +61,7 @@ const ProfileScreen = ({ location, history }) => {
     }
 
     //dependencies is an optional array of dependencies. useEffect() executes callback only when the dependencies have changed between renderings.
-  }, [dispatch, history, userInfo, user, success]);
+  }, [dispatch, history, userInfo, user, success, shouldRenderOrderList]);
 
   //handle submission of profile
   const submitHandler = (e) => {

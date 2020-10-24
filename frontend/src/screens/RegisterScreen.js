@@ -8,7 +8,7 @@ import { register } from '../actions/userActions';
 import FormContainer from '../components/FormContainer';
 
 //destructure location from props
-const LoginScreen = ({ location, history }) => {
+const RegisterScreen = ({ location, history }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -102,4 +102,4 @@ const LoginScreen = ({ location, history }) => {
   );
 };
 
-export default LoginScreen;
+export default RegisterScreen;
