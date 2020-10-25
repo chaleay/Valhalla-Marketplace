@@ -4,12 +4,20 @@ import { Table, Button, Row, Col } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
-import { listProducts } from '../actions/productActions';
+import { listProducts, deleteProductAdmin } from '../actions/productActions';
+import { Link } from 'react-router-dom';
 const ProductListScreen = ({ history, match }) => {
   const dispatch = useDispatch();
 
   const productList = useSelector((state) => state.productList);
   const { loading, error, products } = productList;
+
+  const productAdminDelete = useSelector((state) => state.productAdminDelete);
+  const {
+    success: productDeleteSuccess,
+    error: errorDelete,
+    loading: loadingDelete,
+  } = productAdminDelete;
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -20,11 +28,13 @@ const ProductListScreen = ({ history, match }) => {
     } else {
       history.push('/login');
     }
-  }, [dispatch, history, userInfo]);
+  }, [dispatch, history, userInfo, productDeleteSuccess]);
+
+  const createProductHandler = () => {};
 
   const deleteHandler = (id) => {
     if (window.confirm(`Are you sure you want to delete this product?`)) {
-      //put logic here
+      dispatch(deleteProductAdmin(id));
     }
   };
   return (
@@ -33,10 +43,17 @@ const ProductListScreen = ({ history, match }) => {
         <Col>
           <h1>Manage Products</h1>
         </Col>
-        <Col className="text-right"></Col>
+        <Col className="text-right">
+          <Button className="my-3" onClick={createProductHandler}>
+            <i className="fas fa-plus"></i> Create Product
+          </Button>
+        </Col>
       </Row>
 
-      {loading ? (
+      {errorDelete && <Message variant="danger">{errorDelete}</Message>}
+      {loadingDelete ? (
+        <Loader />
+      ) : loading ? (
         <Loader />
       ) : error ? (
         <Message variant="danger">{error}</Message>
@@ -47,36 +64,34 @@ const ProductListScreen = ({ history, match }) => {
           hover
           responsive
           className="table-sm"
-          style={{ backgroundColor: '#bbd0ed', fontSize: '16px' }}
+          style={{ backgroundColor: '#c3e8e7' }}
         >
           <thead>
             <tr>
               <th>ID</th>
               <th>Name</th>
-              <th>Email</th>
-              <th>Admin</th>
-              <th>Modify</th>
+              <th>Price</th>
+              <th>Category</th>
+              <th>Brand</th>
             </tr>
           </thead>
           <tbody>
-            {users.map((user) => (
-              <tr key={user._id}>
-                <td>{user._id}</td>
-                <td>{user.name}</td>
+            {products.map((product) => (
+              <tr key={product._id}>
+                <td>{product._id}</td>
                 <td>
-                  <a style={{ color: '#15590b' }} href={`mailto:${user.email}`}>
-                    {user.email}
-                  </a>
+                  <Link
+                    style={{ color: '#15590b' }}
+                    to={`/product/${product._id}`}
+                  >
+                    {product.name}
+                  </Link>
                 </td>
+                <td>${product.price}</td>
+                <td>{product.category}</td>
+                <td>{product.brand}</td>
                 <td align="center">
-                  {user.isAdmin ? (
-                    <i className="fas fa-check" style={{ color: 'green' }}></i>
-                  ) : (
-                    <i className="fas fa-times" style={{ color: 'red' }}></i>
-                  )}
-                </td>
-                <td align="center">
-                  <LinkContainer to={`/admin/user/${user._id}/edit`}>
+                  <LinkContainer to={`/admin/product/${product._id}/edit`}>
                     <Button variant="dark" className="btn-sm">
                       <i className="fas fa-edit"></i>
                     </Button>
@@ -84,7 +99,7 @@ const ProductListScreen = ({ history, match }) => {
                   <Button
                     variant="danger"
                     className="btn-sm"
-                    onClick={() => deleteHandler(user._id)}
+                    onClick={() => deleteHandler(product._id)}
                   >
                     <i className="fas fa-trash"></i>
                   </Button>

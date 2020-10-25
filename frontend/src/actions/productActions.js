@@ -6,6 +6,9 @@ import {
   PRODUCT_DETAILS_SUCCESS,
   PRODUCT_DETAILS_REQUEST,
   PRODUCT_DETAILS_FAIL,
+  PRODUCT_ADMIN_DELETE_REQUEST,
+  PRODUCT_ADMIN_DELETE_SUCCESS,
+  PRODUCT_ADMIN_DELETE_FAIL,
 } from '../constants/productConstants';
 import axios from 'axios';
 
@@ -51,6 +54,45 @@ export const listProductDetails = (id) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: PRODUCT_DETAILS_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const deleteProductAdmin = (id) => async (dispatch, getState) => {
+  try {
+    //redux action type - FIRST THE REQUEST
+    dispatch({
+      type: PRODUCT_ADMIN_DELETE_REQUEST,
+    });
+
+    //destructure getState.userLogin.userInfo
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    //ADD authorization for header - important get passing middleware check where we check for bearer token
+    const config = {
+      headers: {
+        //put in header to allow auth - otherwise get 401 error
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    //BACKEND CALL
+    await axios.delete(`/api/products/${id}`, config);
+    ///
+
+    //after request, dispatch redux success event
+    dispatch({
+      type: PRODUCT_ADMIN_DELETE_SUCCESS, //this returns userInfo object
+    });
+  } catch (error) {
+    dispatch({
+      type: PRODUCT_ADMIN_DELETE_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

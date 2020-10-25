@@ -6,14 +6,22 @@ import Product from '../models/productModel.js';
 import {
   getProductById,
   getProducts,
+  deleteProduct,
+  updateProductAdmin,
+  createProductAdmin,
 } from '../controllers/productController.js';
+import { admin, protect } from '../middleware/authMiddleware.js';
 
-// @desc Fetch all products
+// @desc GET/POST
 // /api/products/
-router.route('/').get(getProducts);
+router.route('/').get(getProducts).post(protect, admin, createProductAdmin);
 
 // @desc Fetch a product with given id
 // /api/products/:id
-router.route('/:id').get(getProductById);
+router
+  .route('/:id')
+  .get(getProductById)
+  .delete(protect, admin, deleteProduct)
+  .put(protect, admin, updateProductAdmin);
 
 export default router;
