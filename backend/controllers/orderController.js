@@ -1,5 +1,6 @@
 import asyncHandler from 'express-async-handler';
 import Order from '../models/orderModel.js';
+import Product from '../models/productModel.js';
 
 // @desc Create new order
 // @route POST /api/orders
@@ -65,6 +66,14 @@ const getOrderById = asyncHandler(async (req, res) => {
 const updateOrderToPaid = asyncHandler(async (req, res) => {
   //populate user with name and email
   const order = await Order.findById(req.params.id);
+
+  //take off inStock amounts from products in DB
+  order.orderItems.map(async (orderItem) => {
+    //find the product with the matching id in the order
+    const product = await Product.findById(orderItem.product);
+    product.countInStock -= orderItem.qty;
+    await product.save();
+  });
 
   //update the current order
   if (order) {
