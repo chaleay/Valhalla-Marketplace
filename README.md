@@ -6,18 +6,19 @@ An innovative, consumer-driven marketplace. Created to flex my Full-Stack Web De
  ## FrontEnd
  <ul>
  <li>React</li>
- Redux
- Bootstrap 4
- Paypal API
-</ul? 
+ <li>Redux</li>
+ <li>Bootstrap 4</li>
+ <li>Paypal API</li>
+</ul>
  ## Backend
- MongoDB
- Axios
- Express
- Node.js
- bCrpyt
- JWT Auth
- 
+ <ul>
+  <li>MongoDB</li>
+  <li>Axios</li>
+  <li> Express</li>
+  <li>Node.js</li>
+  <li>bCrpyt</li>
+  <li>JWT Auth</li>
+</ul> 
 # Checkout the demo here!
 https://valhallaapp.herokuapp.com/
 
