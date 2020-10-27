@@ -4,11 +4,12 @@ An innovative, consumer-driven marketplace. Created to flex my Full-Stack Web De
 # What technologies are used?
  A whole bunch:
  ## FrontEnd
- React
+ <ul>
+ <li>React</li>
  Redux
  Bootstrap 4
  Paypal API
- 
+</ul? 
  ## Backend
  MongoDB
  Axios
