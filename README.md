@@ -1,5 +1,6 @@
 # Valhalla-Marketplace
 An innovative, consumer-driven marketplace. Created to flex my Full-Stack Web Dev muscles. Uses the MERN stack.
+<a href="https://imgur.com/a2Kuzyd"><img src="https://i.imgur.com/a2Kuzyd.png" title="source: imgur.com" /></a>
 
 # What technologies are used?
  A whole bunch:
