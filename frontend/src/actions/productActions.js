@@ -18,14 +18,14 @@ import {
 } from '../constants/productConstants';
 import axios from 'axios';
 
-export const listProducts = () => async (dispatch) => {
+export const listProducts = (keyword = '') => async (dispatch) => {
   //dispatch actions to the reducer
   try {
     //dispatch a request (goes to productReducers)
     dispatch({ type: PRODUCT_LIST_REQUEST });
 
     //fecth data from route (await since need to wait for all data to be fetched)
-    const { data } = await axios.get('/api/products');
+    const { data } = await axios.get(`/api/products?keyword=${keyword}`);
 
     //dispatch a successful request after obtaining the data
     dispatch({

@@ -6,11 +6,13 @@ import { listProducts } from '../actions/productActions';
 import Message from '../components/Message';
 import Loader from '../components/Loader';
 
-const HomeScreen = () => {
+const HomeScreen = ({ match }) => {
   //useState hook - first param in array is what we cwant to call this piece of state,
   //and then what we call to manipulate this state / set the state
   //const [products, setProducts] = useState([]);
   const dispatch = useDispatch();
+
+  const keyword = match.params.keyword;
 
   //retrieve list of all products from state in store file
   const productList = useSelector((state) => state.productList);
@@ -18,7 +20,7 @@ const HomeScreen = () => {
   const { loading, error, products } = productList;
 
   useEffect(() => {
-    dispatch(listProducts());
+    dispatch(listProducts(keyword));
   }, [dispatch]);
 
   return (

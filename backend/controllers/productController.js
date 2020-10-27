@@ -2,7 +2,22 @@ import asyncHandler from 'express-async-handler';
 import Product from '../models/productModel.js';
 
 const getProducts = asyncHandler(async (req, res) => {
-  const products = await Product.find();
+  //req.query retrives question mark strings in url
+
+  //EX:
+  // GET /search?q=tobi+ferret
+  //console.dir(req.query.q)
+  // => 'tobi ferret'
+  const keyword = req.query.keyword
+    ? {
+        name: {
+          $regex: req.query.keyword,
+          $options: 'i',
+        },
+      }
+    : {};
+
+  const products = await Product.find({ ...keyword });
 
   res.json(products);
 });
