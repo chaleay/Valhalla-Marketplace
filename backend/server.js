@@ -19,10 +19,6 @@ const app = express();
 
 app.use(express.json());
 
-app.get('/', (req, res) => {
-  res.send('API is running');
-});
-
 // /api/prodcuts
 app.use('/api/products', productRoutes);
 // /api/users/login
@@ -38,6 +34,16 @@ app.get('/api/config/paypal', (req, res) => {
 const __dirname = path.resolve();
 //need to make upload folder static
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
+
+//HANDLE PRODUCTION
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '/frontend/build')));
+
+  app.get('*', (req, res) =>
+    res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'))
+  );
+}
+//HANDLE PROD END
 
 //Custom error handling
 app.use(notFound);

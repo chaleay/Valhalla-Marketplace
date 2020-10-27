@@ -70,7 +70,7 @@ const OrderScreen = ({ history, match }) => {
       } else {
         setSdkReady(true);
       }
-  }, [dispatch, orderId, successPay, order, successDeliver, history]);
+  }, [dispatch, orderId, successPay, order, successDeliver, history, userInfo]);
 
   const deliverHandler = () => {
     dispatch(deliverOrder(order));
