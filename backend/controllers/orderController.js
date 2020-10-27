@@ -97,6 +97,27 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
   }
 });
 
+//@desc update order to paid
+//@route PUT /api/orders/:id/pay
+//@access Private
+const updateOrderToDelivered = asyncHandler(async (req, res) => {
+  //populate user with name and email
+  const order = await Order.findById(req.params.id);
+
+  //update the current order
+  if (order) {
+    order.isDelivered = true;
+    order.deliveredAt = Date.now();
+
+    //update existing order in DB
+    const updatedOrder = await order.save();
+    res.json(updatedOrder);
+  } else {
+    res.status(404);
+    throw new Error('An error occured while processing payment information.');
+  }
+});
+
 // @desc Get logged in user orders
 // @route GET /api/orders/myorders
 // @access Private
@@ -113,4 +134,33 @@ const getMyOrders = asyncHandler(async (req, res) => {
   }
 });
 
-export { addOrderItems, getOrderById, updateOrderToPaid, getMyOrders };
+const getOrders = asyncHandler(async (req, res) => {
+  //populate user with name and email
+  const orders = await Order.find({}).populate('user', 'id name');
+  res.json(orders);
+});
+
+// @desc delete user
+// @route delete /api/users/
+// @private private/admin route - user deletion follows seperate route and seperate security
+const deleteOrder = asyncHandler(async (req, res) => {
+  const order = await Order.findById(req.params.id);
+
+  if (order) {
+    await order.remove();
+    res.json({ message: 'Order removed' });
+  } else {
+    res.status(404);
+    throw new Error('Order not found');
+  }
+});
+
+export {
+  addOrderItems,
+  getOrderById,
+  updateOrderToPaid,
+  getMyOrders,
+  getOrders,
+  deleteOrder,
+  updateOrderToDelivered,
+};

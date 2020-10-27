@@ -17,6 +17,7 @@ import UserListScreen from './screens/UserListScreen';
 import UserEditScreen from './screens/UserEditScreen';
 import ProductListScreen from './screens/ProductListScreen';
 import ProductEditScreen from './screens/ProductEditScreen';
+import OrderListScreen from './screens/OrderListScreen';
 
 //by default runs on port 3000
 const App = () => {
@@ -28,6 +29,7 @@ const App = () => {
           <Route path="/order/:id" component={OrderScreen} />
           <Route path="/login" component={LoginScreen} />
           <Route path="/placeOrder" component={PlaceOrderScreen} />
+          <Route path="/admin/orderlist" component={OrderListScreen} />
           <Route path="/shipping" component={ShippingScreen}></Route>
           <Route path="/payment" component={PaymentScreen} />
           <Route path="/register" component={RegisterScreen} />
