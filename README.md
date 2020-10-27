@@ -19,7 +19,8 @@ An innovative, consumer-driven marketplace. Created to flex my Full-Stack Web De
   <li>bCrpyt</li>
   <li>JWT Auth</li>
 </ul> 
-# Checkout the demo here!
+
+<h1>Checkout the demo here!</h1>
 https://valhallaapp.herokuapp.com/
 
  
