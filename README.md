@@ -10,7 +10,7 @@ An innovative, consumer-driven marketplace. Created to flex my Full-Stack Web De
  <li>Bootstrap 4</li>
  <li>Paypal API</li>
 </ul>
- ## Backend
+ <h2>Backend</h2>
  <ul>
   <li>MongoDB</li>
   <li>Axios</li>
